@@ -218,8 +218,9 @@ start_services() {
     print_status "Press Ctrl+C to stop both services"
     echo ""
     
-    # Create a temporary directory for log files
-    LOG_DIR=$(mktemp -d)
+    # Store logs in the app directory (persistent, not temp)
+    LOG_DIR="$(cd "$(dirname "$0")" && pwd)/logs"
+    mkdir -p "$LOG_DIR"
     BACKEND_LOG="$LOG_DIR/backend.log"
     FRONTEND_LOG="$LOG_DIR/frontend.log"
     
@@ -236,9 +237,9 @@ start_services() {
             kill "$FRONTEND_PID" 2>/dev/null || true
         fi
         
-        # Clean up log directory
-        rm -rf "$LOG_DIR" 2>/dev/null || true
-        
+        print_status "Logs available at:"
+        print_status "  Backend:  $BACKEND_LOG"
+        print_status "  Frontend: $FRONTEND_LOG"
         print_success "Services stopped. Goodbye!"
         exit 0
     }
@@ -310,9 +311,13 @@ start_services() {
     print_status "API Documentation: http://localhost:8000/docs"
     print_status "Database: SQLite (hedge_fund.db in project root)"
     echo ""
+    print_status "Logs:"
+    print_status "  Backend:  $BACKEND_LOG"
+    print_status "  Frontend: $FRONTEND_LOG"
+    echo ""
     print_status "Press Ctrl+C to stop both services"
     echo ""
-    
+
     # Wait for user interrupt
     while true; do
         # Check if processes are still running

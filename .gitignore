@@ -1,3 +1,6 @@
+# Logs
+app/logs/
+
 # Python
 __pycache__/
 *.py[cod]
